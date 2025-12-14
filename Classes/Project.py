@@ -1,7 +1,7 @@
 class Project:
-    def __init__(self, ProjectName, Description, PManeger, StartDate, EndDate):
+    def __init__(self, ProjectName, Description, PManager, StartDate, EndDate):
         self.ProjectName = ProjectName
         self.Description = Description
-        self.PManeger = PManeger
+        self.PManager = PManager
         self.StartDate = StartDate
         self.EndDate = EndDate
