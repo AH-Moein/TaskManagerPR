@@ -2,10 +2,11 @@ import sqlite3
 
 
 def create_tables():
-    connectionString = sqlite3.connect("TaskManagement.db")
-    cursor = connectionString.cursor()
 
-    cursor.execute(
+    with sqlite3.connect("TaskManagement.db") as connection:
+        conn = connection.cursor()
+
+    conn.execute(
         """
     CREATE TABLE IF NOT EXISTS members (
         member_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,7 +17,7 @@ def create_tables():
     """
     )
 
-    cursor.execute(
+    conn.execute(
         """
     CREATE TABLE IF NOT EXISTS projects (
         project_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +31,7 @@ def create_tables():
     """
     )
 
-    cursor.execute(
+    conn.execute(
         """
     CREATE TABLE IF NOT EXISTS tasks (
         task_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,11 +46,7 @@ def create_tables():
     )
     """
     )
-
     print("Table Created Succesful")
-
-    connectionString.commit()
-    connectionString.close()
 
 
 if __name__ == "__main__":
