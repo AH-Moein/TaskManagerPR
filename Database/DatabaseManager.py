@@ -30,8 +30,7 @@ class DatabaseManager:
         rows = cursor.fetchall()
         members_list = []
         for row in rows:
-            new_member = Member(row[1], row[2], row[3])
-            new_member.id = row[0]
+            new_member = Member(row[1], row[2], row[3], id=row[0])
             members_list.append(new_member)
         return members_list
 
@@ -62,8 +61,7 @@ class DatabaseManager:
         rows = cursor.fetchall()
         project_list = []
         for row in rows:
-            new_project = Project(row[1], row[2], row[3], row[4], row[5])
-            new_project.id = row[0]
+            new_project = Project(row[1], row[2], row[3], row[4], row[5], id=row[0])
             project_list.append(new_project)
         return project_list
 
@@ -110,8 +108,16 @@ class DatabaseManager:
         rows = cursor.fetchall()
         tasks_list = []
         for row in rows:
-            new_task = Task(row[2], row[3], row[4], row[5], row[6])
-            new_task.id = row[0]
+            new_task = Task(
+                row[2],
+                row[3],
+                row[4],
+                row[5],
+                row[6],
+                project_id=row[1],
+                assignee_id=row[4],
+                id=row[0],
+            )
             tasks_list.append(new_task)
         return tasks_list
 
@@ -121,7 +127,15 @@ class DatabaseManager:
         rows = cursor.fetchall()
         tasks_list = []
         for row in rows:
-            new_task = Task(row[2], row[3], row[4], row[5], row[6])
-            new_task.id = row[0]
+            new_task = Task(
+                row[2],
+                row[3],
+                row[4],
+                row[5],
+                row[6],
+                project_id=row[1],
+                assignee_id=row[4],
+                id=row[0],
+            )
             tasks_list.append(new_task)
         return tasks_list

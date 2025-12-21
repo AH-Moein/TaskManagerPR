@@ -1,7 +1,8 @@
 from Database.DatabaseManager import DatabaseManager
 from Database.Database import create_tables
-from Classes.Member import Member
+from Classes.Report import ReportManager
 from Classes.Project import Project
+from Classes.Member import Member
 from Classes.Task import Task
 import datetime
 
@@ -27,6 +28,7 @@ def input_date(msg):
 def main():
     create_tables()
     db = DatabaseManager("TaskManagement.db")
+    repo = ReportManager(db)
 
     while True:
         print("\n--- Main Menu ---")
@@ -108,6 +110,7 @@ def main():
 
         elif choice == "4":
             print("\n(4) Reports")
+            repo = ReportManager(db)
             print("[Teammates section]")
 
         elif choice == "5":
