@@ -1,6 +1,8 @@
 import sqlite3
 
 
+# query for create tables and set some rules for fileds and set forien keys for linking tables
+# in this file we just create table , functions defined in "DatabaseManager.py"
 def create_tables():
 
     with sqlite3.connect("TaskManagement.db") as connection:
@@ -49,5 +51,6 @@ def create_tables():
     print("Table Created Succesful")
 
 
+# for testing create table in just run this file
 if __name__ == "__main__":
     create_tables()

@@ -78,6 +78,8 @@ def main():
             print("2. Change Task Status")
             print("3. Reassign Task")
             print("4. Show Project Tasks")
+            print("5. Show Person Tasks")
+            print("6. Show Tasks by Status")
             sub = input("Select: ")
 
             if sub == "1":
@@ -107,11 +109,83 @@ def main():
                     print(
                         f"Task: {t.TaskName} | Status: {t.Status} | Deadline: {t.Deadline}"
                     )
+            elif sub == "5":
+                aid = input_int("Assignee ID: ")
+                tasks = db.get_tasks_by_assignee(aid)
+                if not tasks:
+                    print("No tasks found for this member.")
+                for t in tasks:
+                    print(
+                        f"Task: {t.TaskName} | Status: {t.Status} | Project ID: {t.project_id}"
+                    )
+
+            elif sub == "6":
+                stat = input("Status (ToDo/In Progress/Done): ")
+                tasks = db.get_tasks_by_status(stat)
+                if not tasks:
+                    print(f"No tasks found with status '{stat}'.")
+                for t in tasks:
+                    print(
+                        f"Task: {t.TaskName} | Deadline: {t.Deadline} | Assignee ID: {t.assignee_id}"
+                    )
 
         elif choice == "4":
             print("\n(4) Reports")
             repo = ReportManager(db)
-            print("[Teammates section]")
+            print("1. Show Postponed Tasks")
+            print("2. Show Tasks Due in 7 Days")
+            print("3. Show Project Summary")
+            print("4. Export All Projects Summary to File")
+            print("5. Export Postponed Tasks Summary to File")
+            print("6. Export Members Active Tasks to File")
+            print("7. Show Person Tasks")
+            sub = input("Select: ")
+
+            if sub == "1":
+                postponed = repo.postpone_task()
+                if not postponed:
+                    print("No postponed tasks.")
+                else:
+                    for t in postponed:
+                        print(
+                            f"Task: {t.TaskName} | Deadline: {t.Deadline} | Status: {t.Status}"
+                        )
+
+            elif sub == "2":
+                dueon = repo.dueon_task()
+                if not dueon:
+                    print("No tasks due in next 7 days.")
+                else:
+                    for t in dueon:
+                        print(
+                            f"Task: {t.TaskName} | Deadline: {t.Deadline} | Status: {t.Status}"
+                        )
+
+            elif sub == "3":
+                pid = input_int("Project ID: ")
+                summary = repo.project_summary(pid)
+                for line in summary:
+                    print(line)
+
+            elif sub == "4":
+                repo.export_all_projects_summary()
+
+            elif sub == "5":
+                repo.export_postpone_tasks_summary()
+
+            elif sub == "6":
+                repo.export_members_tasks()
+
+            elif sub == "7":
+                pid = input("Person ID or Name: ")
+                tasks = repo.person_task(pid)
+                if not tasks:
+                    print("No tasks found for this person.")
+                else:
+                    for t in tasks:
+                        print(
+                            f"Task: {t.TaskName} | Deadline: {t.Deadline} | Status: {t.Status}"
+                        )
 
         elif choice == "5":
             break

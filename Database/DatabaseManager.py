@@ -1,21 +1,27 @@
-import sqlite3
+# import classes in other file
 from Classes.Member import Member
 from Classes.Project import Project
 from Classes.Task import Task
+import sqlite3
 
 
+# we work with Sqllite , so all we want to work with DB defined in this file (all queries)
 class DatabaseManager:
     def __init__(self, db_name="TaskManagement.db"):
         self.db_name = db_name
 
     def _execute_query(self, query, params=()):
         with sqlite3.connect(self.db_name) as conn:
+            conn.execute(
+                "PRAGMA foreign_keys = ON;"
+            )  # PRAGMA for check foriegn key exist
             cursor = conn.cursor()
             cursor.execute(query, params)
             conn.commit()
-            return cursor
+            return cursor  # for use returned data
 
     # --- Section 1: Members ---
+    # define Member functions
     def addMemberdb(self, member):
         try:
             query = "INSERT INTO members (name, role, email) VALUES (?, ?, ?)"
@@ -35,6 +41,7 @@ class DatabaseManager:
         return members_list
 
     # --- Section 2: Projects ---
+    # define Projects functions
     def create_project(self, project, manager_id):
         try:
             query = """
@@ -66,6 +73,7 @@ class DatabaseManager:
         return project_list
 
     # --- Section 3: Tasks ---
+    # define Task class functions
     def CreateTask(self, task, project_id, assignee_id):
         try:
             query = """
@@ -124,6 +132,44 @@ class DatabaseManager:
     def get_all_tasks(self):
         query = "SELECT * FROM tasks"
         cursor = self._execute_query(query)
+        rows = cursor.fetchall()
+        tasks_list = []
+        for row in rows:
+            new_task = Task(
+                row[2],
+                row[3],
+                row[4],
+                row[5],
+                row[6],
+                project_id=row[1],
+                assignee_id=row[4],
+                id=row[0],
+            )
+            tasks_list.append(new_task)
+        return tasks_list
+
+    def get_tasks_by_assignee(self, assignee_id):
+        query = "SELECT * FROM tasks WHERE assignee_id = ?"
+        cursor = self._execute_query(query, (assignee_id,))
+        rows = cursor.fetchall()
+        tasks_list = []
+        for row in rows:
+            new_task = Task(
+                row[2],
+                row[3],
+                row[4],
+                row[5],
+                row[6],
+                project_id=row[1],
+                assignee_id=row[4],
+                id=row[0],
+            )
+            tasks_list.append(new_task)
+        return tasks_list
+
+    def get_tasks_by_status(self, status):
+        query = "SELECT * FROM tasks WHERE status = ?"
+        cursor = self._execute_query(query, (status,))
         rows = cursor.fetchall()
         tasks_list = []
         for row in rows:
